@@ -1,3 +1,4 @@
+--DWHRU40
 ALTER PROCEDURE [dbo].[Get_monthly_data]
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
@@ -845,7 +846,7 @@ begin try
         end
         else
         begin
-            --DWHRU40
+
 			declare @type varchar(50) =
 			(
 				select t.name
@@ -857,8 +858,8 @@ begin try
 			)
 
             set @durationColumn  =
-            case 
-                when @ColumnName = 'FileID' then 'count(distinct ID_AudioDownloadFileId)'  
+            case
+                when @ColumnName = 'FileID' then 'count(distinct ID_AudioDownloadFileId)'
                 when @ColumnName = 'DistinctHosts' then 'count(distinct ID_Host)'
                 when @ColumnName = 'DistinctDevices' then 'count(distinct ID_DeviceID)'
                 when @ColumnName = 'DistinctUDIDs' then 'count(distinct ID_UDID)'
@@ -866,18 +867,17 @@ begin try
                 when @ColumnName in ('UserID', 'UniqueEmail', 'CookieId', 'UniqueUserId',
                       'SenderUserID', 'ReceiverUserID', 'SenderID', 'InternalLikeOperationsEntity') then 'count(distinct ' + @ColumnName + ')'
                 when @ColumnName = 'CallsMinusFailures' then 'sum(case when calls >= failures then calls - failures else 0 end)'
-                when @TableName ='MMTemplateVarsUsage_day' and @ColumnName = 'UnusedDivCalls' then 'cast(sum(unused) as float) / sum(calls)' 
+                when @TableName ='MMTemplateVarsUsage_day' and @ColumnName = 'UnusedDivCalls' then 'cast(sum(unused) as float) / sum(calls)'
                 when @TableName ='VideoMovieEventsLog' AND @ColumnName = 'Calls' then 'count(1)'
                 when @TableName = 'PresentEventsLog' AND @ColumnName = 'Calls' then 'count(1)'
-                when @TableName IN ('MCAccessLogMailboxes_day','MRAccessLogMailboxes_day') AND @ColumnName = 'MailboxesAvg' then 'convert(float, sum(mailboxes)) / sum(devices)'                        
-                when @TableName IN ('MCAccessLogMailboxes_day','MRAccessLogMailboxes_day') AND @ColumnName = 'DevicesAvg' then 'convert(float, sum(devices)) / sum(mailboxes)'                        
-                when @TableName like 'UserActivityByPlatform%' then 
+                when @TableName IN ('MCAccessLogMailboxes_day','MRAccessLogMailboxes_day') AND @ColumnName = 'MailboxesAvg' then 'convert(float, sum(mailboxes)) / sum(devices)'
+                when @TableName IN ('MCAccessLogMailboxes_day','MRAccessLogMailboxes_day') AND @ColumnName = 'DevicesAvg' then 'convert(float, sum(devices)) / sum(mailboxes)'
+                when @TableName like 'UserActivityByPlatform%' then
                   case when @ColumnName = 'calls'
                     then 'sum(cast(calls as bigint))'
                     else 'sum(' + @ColumnName + ')'
                   end
                 else
-                  --DWHRU40
                   case
 					when @ColumnName = 'calls'
 						then @aggregation + '(cast(calls as bigint))'
