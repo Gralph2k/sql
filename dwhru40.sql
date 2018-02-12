@@ -1,11 +1,4 @@
-USE [dwh]
-GO
-/****** Object:  StoredProcedure [dbo].[Get_monthly_data]    Script Date: 12.02.2018 16:37:07 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER PROCEDURE [dbo].[Get_monthly_data] 
+ALTER PROCEDURE [dbo].[Get_monthly_data]
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
   @HostName VARCHAR(2000) = '',
@@ -794,7 +787,7 @@ begin try
         end
         else if @UseBatchMode = 1
         begin
-            --Даты начала/конца периода
+            --пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ/пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
           declare @paramDefinition nvarchar(max),@CSFrom datetime,@CSTo datetime     
           set @sql='select @CSFrom=MIN('+@time_period + '_from), @CSTo=MAX('+@time_period + '_to) 
                       from dwh.dbo.time t 

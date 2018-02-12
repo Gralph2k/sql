@@ -1,4 +1,4 @@
-ALTER PROCEDURE [dbo].[Get_monthly_data]
+ALTER procedure [dbo].[Get_monthly_data]
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
   @HostName VARCHAR(2000) = '',
@@ -845,17 +845,6 @@ begin try
         end
         else
         begin
-            --DWHRU40
-			declare @type varchar(50) =
-			(
-				select t.name
-				from sys.columns c
-				inner join sys.types t
-					on c.system_type_id = t.system_type_id
-				where object_id = object_id(@TableName)
-				  and c.name = @ColumnName
-			)
-
             set @durationColumn  =
             case 
                 when @ColumnName = 'FileID' then 'count(distinct ID_AudioDownloadFileId)'  
@@ -876,26 +865,15 @@ begin try
                     then 'sum(cast(calls as bigint))'
                     else 'sum(' + @ColumnName + ')'
                   end
-                else
-                  --DWHRU40
-                  case
-					when @ColumnName = 'calls'
-						then @aggregation + '(cast(calls as bigint))'
-						else
-							case
-								when @Multiplier <> 1 and @type like '%int%'
-									then @aggregation + '(cast([' + @ColumnName + '] * '  + cast(@Multiplier as varchar) + ' as bigint))'
-								when @Multiplier = 1 and @type like '%int%'
-									then @aggregation + '(cast([' + @ColumnName + '] as bigint))'
-								when @Multiplier <> 1 and @type not like '%int%'
-									then @aggregation + '([' + @ColumnName + '] * '  + cast(@Multiplier as varchar) + ')'
-								when @Multiplier = 1 and @type not like '%int%'
-									then @aggregation + '([' + @ColumnName + '])'
-							end
+                else 
+                  case when @ColumnName = 'calls'
+                    then @aggregation + '(cast(calls as bigint))'
+                    else @aggregation + '(cast(' + @ColumnName + ' as bigint))'
                   end
+
             end
 
-            if @Multiplier <> 1 and @durationColumn not like '%*%'
+            if @Multiplier <> 1
                 set @durationColumn += ' * '  + cast(@Multiplier as varchar)
 
           set @com +=
