@@ -11,6 +11,7 @@
 --DWHRU159
 --DWHRU162
 --DWHRU164
+--DWHRU199
 CREATE PROCEDURE [dbo].[Get_monthly_data] 
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
