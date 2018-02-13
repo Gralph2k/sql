@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="493c76cf-3993-4817-9dea-d3ae7276e426" name="Default" comment="Add DWHRU12 to template">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dwhru12.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dwhru26.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/dwhru40.sql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/get_monthly_data.sql" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/get_monthly_data.sql" afterPath="$PROJECT_DIR$/get_monthly_data.sql" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +14,38 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="dwhru12_get_monthly_data.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dwhru12_get_monthly_data.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="!!!dwhru40_get_monthly_data.sql" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/!!!dwhru40_get_monthly_data.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="get_monthly_data.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/get_monthly_data.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -388,16 +416,51 @@
       <option name="project" value="LOCAL" />
       <updated>1518447369462</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add DWHRU26 to template">
+      <created>1518517981380</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1518517981380</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add DWHRU122 to template">
+      <created>1518518151129</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1518518151129</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add DWHRU131 to template">
+      <created>1518518196496</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1518518196496</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add DWHRU147 to template">
+      <created>1518518335269</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1518518335269</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add DWHRU150 to template">
+      <created>1518518428456</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1518518428456</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1040" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -434,7 +497,12 @@
     <MESSAGE value="Add DWHRU40 to template" />
     <MESSAGE value="Add DWHRU12" />
     <MESSAGE value="Init by dwhru40" />
-    <option name="LAST_COMMIT_MESSAGE" value="Init by dwhru40" />
+    <MESSAGE value="Add DWHRU26 to template" />
+    <MESSAGE value="Add DWHRU122 to template" />
+    <MESSAGE value="Add DWHRU131 to template" />
+    <MESSAGE value="Add DWHRU147 to template" />
+    <MESSAGE value="Add DWHRU150 to template" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add DWHRU150 to template" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -468,7 +536,23 @@
     <entry file="file://$PROJECT_DIR$/get_monthly_data.sql">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="2" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="2" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dwhru12_get_monthly_data.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/!!!dwhru40_get_monthly_data.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>

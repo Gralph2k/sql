@@ -4,7 +4,8 @@
 --DWHRU131
 --DWHRU147
 --DWHRU150
-ALTER PROCEDURE [dbo].[Get_monthly_data] 
+--DWHRU153
+CREATE procedure [dbo].[Get_monthly_data] 
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
   @HostName VARCHAR(2000) = '',
