@@ -2,6 +2,7 @@
 --DWHRU26
 --DWHRU122
 --DWHRU131
+--DWHRU147
 ALTER procedure [dbo].[Get_monthly_data] 
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
@@ -856,7 +857,7 @@ begin try
                 when @ColumnName = 'DistinctDevices' then 'count(distinct ID_DeviceID)'
                 when @ColumnName = 'DistinctUDIDs' then 'count(distinct ID_UDID)'
                 when @ColumnName = 'UserIDAll' then 'count(1)'
-                when @ColumnName in ('UserID', 'UniqueEmail', 'CookieId', 'UniqueUserId',
+                when @ColumnName in ('UserID', 'UniqueEmail', 'CookieId', 'UniqueUserId','UniqueUserMID','UniqueUserVID',
                       'SenderUserID', 'ReceiverUserID', 'SenderID', 'InternalLikeOperationsEntity','FineId') then 'count(distinct ' + @ColumnName + ')'
                 when @ColumnName = 'CallsMinusFailures' then 'sum(case when calls >= failures then calls - failures else 0 end)'
                 when @TableName ='MMTemplateVarsUsage_day' and @ColumnName = 'UnusedDivCalls' then 'cast(sum(unused) as float) / sum(calls)' 
