@@ -1,6 +1,7 @@
 --DWHRU12
 --DWHRU26
 --DWHRU122
+--DWHRU131
 ALTER procedure [dbo].[Get_monthly_data] 
   @StartDate DATE,
   @GroupName VARCHAR(2000) = '',
