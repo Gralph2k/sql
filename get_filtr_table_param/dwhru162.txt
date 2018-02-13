@@ -1,0 +1,279 @@
+CREATE procedure [dbo].[get_filtr_table_param](
+	@TableName VARCHAR(128),
+	@ParamName VARCHAR(128),
+	@ParamValue VARCHAR(MAX),
+	@in VARCHAR(10),
+	@ReturnValue VARCHAR(MAX) OUTPUT,
+	@sqlkey bit = 0
+)
+AS
+BEGIN
+	SET NOCOUNT ON
+	DECLARE @ret VARCHAR(MAX) = ''
+	print 'get_filtr_table_param'
+
+	if CHARINDEX(',!', @ParamValue) > 0
+	begin
+	  declare @ReturnValue1 varchar(max), @ReturnValue2 varchar(max), @ParamValue1 varchar(max), @ParamValue2 varchar(max)
+	  set @ParamValue1 = left(@ParamValue, CHARINDEX(',!', @ParamValue) -1)
+	  set @ParamValue2 = right(@ParamValue, len(@ParamValue) - CHARINDEX(',!', @ParamValue))
+
+	  EXEC dbo.get_filtr_table_param
+		@TableName = @TableName,
+		@ParamName = @ParamName,
+		@ParamValue = @ParamValue1,
+		@in = @in,
+		@ReturnValue = @ReturnValue1 OUTPUT,
+		@sqlkey = @sqlkey
+
+	  EXEC dbo.get_filtr_table_param
+		@TableName = @TableName,
+		@ParamName = @ParamName,
+		@ParamValue = @ParamValue2,
+		@in = @in,
+		@ReturnValue = @ReturnValue2 OUTPUT,
+		@sqlkey = @sqlkey
+
+	  SET @ReturnValue = @ReturnValue1 + @ReturnValue2
+	  RETURN
+	end
+
+	while substring(@ParamValue, 1, 1) = '!'
+	begin
+	  set @in = case @in when ' in ' then ' not in ' when ' not in ' then ' in ' end
+	  set @ParamValue = SUBSTRING(@ParamValue, 2, len(@ParamValue)-1)
+	end
+
+	if @sqlkey = 0
+	begin
+		set @ParamValue = REPLACE(@ParamValue, '''', '''''')
+		set @ParamValue = REPLACE(@ParamValue, ', ', ',')
+
+		IF @ParamName  = 'UserPartition' BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		-- exceptions
+		IF @TableName IN (
+				'ApplicationAccess','ApplicationPayment','ApiApplicationRequest','ApiApplicationCallback', 'ApiApplicationMethodLimits',
+				'ApplicationAccessBy5Min','ApplicationAccess_new','ApiApplicationDetailedRequest','ApiApplicationDetailedRequestInvoke',
+				'ApiApplicationRequestInvoke','ClientCall','ApiAppMethodCall','ApiWebCallsByApp','ApiWebCallsDetailed','AppPushOperations',
+				'ApiDeprecatedStat','ApiBatchDetailedCalls','ApiBatchDetailedSize', 'ApiSdkSignOut', 'ApiSdkLaunch'
+			) AND @ParamName IN ('Type', 'Url', 'Category','Subcategories','platforms') BEGIN
+			EXECUTE dwh.dbo.get_filtr_ApplicationID_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+		IF @TableName in ( 'UserPresents', 'UserActualPresents','UserPresents_ThankYou') AND @ParamName = 'Present'  BEGIN
+			SET @ReturnValue = ' and id_present ' + @in + '(' + @ParamValue + ')'
+			RETURN
+		END
+
+		IF @TableName = 'UserPresents' AND @ParamName = 'PresentCategory' BEGIN
+			SET @ReturnValue = ' and id_present '+@in+'  (select id_present from user_dwh..PresentCategoryBridge with (nolock) where id_PresentCategory '
+				+ ' in ' + '(' + @ParamValue + '))'
+			RETURN
+		END
+
+		IF @TableName in ( 'UserPresents', 'UserActualPresents') AND @ParamName IN ('Visibility','TariffClass','PresentStatus','SelfPresent','Wrapper') BEGIN
+			SET @ReturnValue  = ' and Id_' + @ParamName + ' ' + @in
+				+'(select param from dbo.fn_mvparam_advanced(''' + @ParamValue + ''', '','', ''{'', ''}''))'
+			RETURN
+		END
+		IF @TableName = 'VideoMovieEventsLog' AND @ParamName IN ('MovieId','GroupId','Duration') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName IN ('MMPlayer','MMCometSession_Short_Report','MMCometSessionExp_Short_Report') AND @ParamName IN ('Duration') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName = 'PresentEventsLog' AND @ParamName IN ('SenderId','ReceiverId','PresentId','HolidayId') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF (@TableName = 'MMLogRequestOAuthToken' AND @ParamName IN ('id_ClientId')) OR
+           (@TableName = 'MMLogRequestOauthTokenError' AND @ParamName IN ('id_ClientId'))
+		BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName = 'MRCEvent' AND @ParamName IN ('SpaceUsed','SpaceTotal') BEGIN
+			SET @ParamName='ID_'+@ParamName;
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName = 'MMCreateMy' AND @ParamName = 'MMCreateMyOneLinkCompanyId' BEGIN
+			SET @ReturnValue = ' and id_MMCreateMyOneLinkCompanyId '+@in+'
+			(select id from dwh..MMCreateMyOneLinkCompanyId_v with (nolock) where name  like ''' + @ParamValue + ''')'
+			RETURN
+		END
+
+		IF @TableName IN ('MMLike', 'MMComment') AND @ParamName IN ('IsSubscribe') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName IN ('MMLogRequestApiMethodsError') AND @ParamName IN ('AppId', 'ErrorCode') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName IN ('PaymentRequest') AND @ParamName IN ('RoundOurShare') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		IF @TableName IN ('OkMobileAppExp') AND @ParamName IN ('OkMobileAppExpPartition') BEGIN
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+		DECLARE @cod_tab SYSNAME, @cod_col SYSNAME
+		-- rare cases: param name <> codifier table name
+		SET @ParamName = dwh.dbo.Decode_ParamName(@TableName, @ParamName)
+		SET @cod_tab = @ParamName
+		SET @cod_col = 'id_' + @ParamName
+
+		IF @ParamName = 'HostName2' BEGIN
+			SET @cod_tab = 'Host'
+			SET @cod_col = 'ID_Host2'
+		END
+
+		IF @ParamName = 'GroupName2' BEGIN
+			SET @cod_tab = 'HostGroup'
+			SET @cod_col = 'ID_HostGroup'
+		END
+
+		print @tablename + '.' + @ParamName
+		IF NOT EXISTS(SELECT * FROM sys.objects WHERE name = @cod_tab)
+		BEGIN
+			SET @ParamName = 'ID_' + @ParamName;
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+
+ 		-- standard processing begins
+		begin try
+			create table #IDS(ID bigint, rn bigint identity(1,1));
+		end try
+		begin catch
+			truncate table #IDS;
+		end catch;
+
+		declare @com varchar(max);
+		declare @par varchar(100), @id_count int;
+
+		if charindex('%', @ParamValue) = 0
+		begin
+			set @com = 'insert into #IDS select top 201 id from dbo.['+@cod_tab+'] AS m WITH(NOLOCK)
+			   where m.name in (select param from dbo.fn_mvparam_advanced('''+@ParamValue+''','','', ''{'', ''}'')) ';
+			exec(@com);
+		end
+		else
+		begin
+			declare db_cursor cursor for
+			select param
+			from dbo.fn_mvparam_advanced(@ParamValue, ',', '{', '}');
+
+			open db_cursor;
+			fetch next from db_cursor into @par;
+
+			while @@FETCH_STATUS = 0
+			begin
+				set @com = 'insert into #IDS select top 201 id from dbo.['+@cod_tab+'] AS m WITH(NOLOCK)
+				   where m.name like '''+@par+'''';
+
+				if dbo.istable(@TableName) = 1
+					set @com=@com+' OPTION (TABLE HINT (m, FORCESCAN,NOLOCK)) '
+				else
+					set @com=@com+' OPTION (TABLE HINT (m, NOLOCK)) '
+
+				exec(@com);
+
+				fetch next from db_cursor into @par;
+				end
+
+			CLOSE db_cursor
+			DEALLOCATE db_cursor
+		end;
+
+		select @id_count = count(1)
+		from #ids;
+
+		if @id_count < 200
+		begin
+			DECLARE @iXml xml;
+			SELECT @iXml = (SELECT Convert(varchar(20),id) + ',' from #IDS order by id FOR XML PATH);
+			SELECT @ret=isnull(@iXml.value('.','varchar(max)'),'');
+
+			if @ret = ''
+				set @ret = '-666,';
+
+			set @ret = Left(@ret,Len(@ret)-1);
+			set @ret=' AND S.' + @cod_col+@in+'('+@ret+') ';
+		end
+		else if @id_count > 0
+		begin
+			declare db_cursor cursor for
+			select param
+			from dbo.fn_mvparam_advanced(@ParamValue, ',', '{', '}');
+
+			declare @i int = 0;
+			set @com = 'and S.' + @cod_col + ' in (select id from dbo.[' + @cod_tab + '] m with (nolock) where ';
+			open db_cursor;
+			fetch next from db_cursor into @par;
+
+			while @@fetch_status = 0
+			begin
+				set @i += 1;
+
+				if @i > 1
+				begin
+					if ltrim(rtrim(@in)) = 'in'
+						set @com += ' or '
+					else
+						set @com += ' and '
+				end
+
+				set @com += ' m.name '
+
+				if ltrim(rtrim(@in)) <> 'in'
+					set @com += ' not '
+
+				set @com += ' like  ''' + @par + '''';
+
+				fetch next from db_cursor into @par;
+			end
+
+			if @com <> ''
+				set @ret = @com + ')'
+
+			close db_cursor
+			deallocate db_cursor
+		end
+
+		if @ParamName = 'GroupName2'
+			set @ret = ' and s.id_host2 in (select s.id from dbo.host s where 1=1 ' + @ret + ')'
+
+		IF NOT EXISTS(SELECT * FROM sys.objects WHERE name = @ParamName) and (@ret is null or @ret = '')
+		--IF @TableName IN ('MRCVideoEvent') AND @ParamName IN ('PixelWidth', 'PixelHeight', 'Bitrate','Rotate', 'AudioTracks', 'VideoTracks','SubtitleTracks', 'DeviceWidth','DeviceHeight',
+		--  'IsOauth','IsWebLink', 'PartNum', 'IsCache', 'Maxbitrate', 'Bufsize', 'HttpCode', 'ConvertStatus')
+		BEGIN
+			SET @ParamName='ID_'+@ParamName;
+			EXECUTE get_filtr_int_param @ParamName, @ParamValue, @in, @ReturnValue OUTPUT
+			RETURN
+		END
+	end
+	else
+	begin
+		set @ret = (select @ParamName name, case when ltrim(rtrim(@in)) != 'in' then '!' else '' end + @ParamValue value FOR XML path('parameter'))
+	end
+
+	set @ReturnValue=@ret;
+END
